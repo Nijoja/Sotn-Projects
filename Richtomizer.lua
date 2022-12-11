@@ -19,10 +19,11 @@ Game_Start		= 0
 Jumping			= 0
 
 Boss_Switch		= 0
-Boss_IDs		= {"MiWo","MiWo","Hipo","Hipo","Rich","Scyl","Olro","Succ","Cerb","GrFa","Dop10","Dop10","Medu","Medu","Akmo","Trio","Trio","Dop40"}
-Boss_Comp_IDs   = {0x03CA38,0x03CA38,0x03CA44,0x03CA44,0x03CA60,0x03CA3C,0x03CA2C,0x03CA4C,0x03CA5C,0x03CA34,0x03CA30,0x03CA30,0x03CA64,0x03CA64,0x03CA74,0x03CA54,0x03CA54,0x03CA70}
-Boss_X_Pos		= {18,21,22,25,34,39,21,45,29,20,56,59,38,41,42,42,45,24}
-Boss_Y_Pos		= {22,22,13,13,08,39,16,33,40,50,23,23,50,50,47,41,41,24}
+Boss_IDs		= {"MiWo","MiWo","Hipo","Hipo","Rich","Scyl","Olro","Succ","Cerb","GrFa","Dop10","Dop10","Medu","Medu","Akmo","Trio","Trio","Dop40","Dop40","Death","Death","Crtr","Crtr","Gala","Gala"}
+Boss_Comp_IDs   = {0x03CA38,0x03CA38,0x03CA44,0x03CA44,0x03CA60,0x03CA3C,0x03CA2C,0x03CA4C,0x03CA5C,0x03CA34,0x03CA30,0x03CA30,0x03CA64,0x03CA64,0x03CA74,0x03CA54,0x03CA54,0x03CA70,0x03CA70,0x03CA58,0x03CA58,0x03CA68,0x03CA68,0x03CA7C,0x03CA7C}
+Boss_X_Pos		= {18,21,22,25,34,39,21,45,29,20,56,59,38,41,42,42,45,22,24,31,34,04,07,43,46}
+Boss_Y_Pos		= {22,22,13,13,08,39,16,33,40,50,23,23,50,50,47,41,41,24,24,23,23,40,40,13,12}
+Boss_Castle		= {00,00,00,00,00,00,00,00,00,00,00,00,17,17,17,17,17,17,17,17,17,17,17,17,17}
 
 --Sets all necessary game variables to respective values
 local function Set_Up()
@@ -91,8 +92,10 @@ local function Boss_Exceptions()
 	x = xp + xo
 	y =	yp + yo
 	
+	c = mainmemory.readbyte(0x1E5458) --Castle Variable. Did u know entrance shares coordinates with creature?
+	
 	for i = 1 , table.getn(Boss_IDs) do --If you are about to fight a boss disable hacks
-		if x == Boss_X_Pos[i] and y == Boss_Y_Pos[i] and mainmemory.readbyte(Boss_Comp_IDs[i]) == 0 then 
+		if x == Boss_X_Pos[i] and y == Boss_Y_Pos[i] and c == Boss_Castle[i] and mainmemory.readbyte(Boss_Comp_IDs[i]) == 0 then 
 			Boss_Switch = Boss_Comp_IDs[i]
 			Zone_31(0, mainmemory.readbyte(Zone_Sprite))
 		elseif x == Boss_X_Pos[i] and y == Boss_Y_Pos[i] and mainmemory.readbyte(Boss_Comp_IDs[i]) ~= 0 and mainmemory.readbyte(0x03C9A4) == 1 and not (xo == 2 and mainmemory.readbyte(0x072F9C) > 250) then 
